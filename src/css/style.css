@@ -13,14 +13,17 @@
    * Note, that relative URLs must be relative from
    * this stylesheet file. 
    */
-  background: url('oba_icon_15x20.jpg') no-repeat top left;
+  background: url('oba_icon.png') no-repeat top left;
   
   width: 15px;
-  height: 20px;
+  height: 15px;
 }
 
 .adplayer-privacyButton .adplayer-text {
   font-family: Calibri, Arial Bold, Sans-Serif, Geneva;
+  font-size: 10px;
+  padding: 0px;
+  margin: 0px;
 }
 
 
