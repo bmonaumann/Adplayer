@@ -19,7 +19,8 @@
   <property name="src-dir" location="src"/>
   <property name="js-dir" location="src/js"/>
   <property name="css-dir" location="src/css"/>
-  <property name="html-dir" location="src/html"/>  
+  <property name="html-dir" location="src/html"/> 
+  <property name="test-dir" location="tests"/>  
 
   <target name="prepare" description="Prepares the build directory.">
     <delete dir="${build-dir}" />
@@ -157,5 +158,14 @@
       <zipfileset dir="${build-dir}" />
     </zip>
     <echo>AdPlayer ${version-detailed} - Release Build Complete</echo>
+  </target>
+
+  <target name="build-tests" depends="_default-build" description="Prepares and generates tests into build dir.">
+  	<copy todir="${build-dir}/tests" overwrite="true">
+      <fileset dir="${test-dir}" />
+    </copy>
+  	
+  	<replace dir="${build-dir}/tests" token="_@ADPLAYER_JS_FILE@_" value="${jsfilename}.js" />
+  	<replace dir="${build-dir}" token="_@VERSION@_" value="${version-detailed}" />
   </target>
 </project>
