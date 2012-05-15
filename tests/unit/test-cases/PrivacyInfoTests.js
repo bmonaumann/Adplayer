@@ -1,33 +1,33 @@
 module('$ADP.PrivacyInfo');
 
-test('testInit', function() {
+test('init', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetTitle', function() {
+test('getTitle', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetText', function() {
+test('getText', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetURL', function() {
+test('getURL', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetLinkText', function() {
+test('getLinkText', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testIsValid', function() {
+test('isValid', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testUsePopup', function() {
+test('usePopup', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testRender', function() {
+test('render', function() {
 	expect(0); // could be removed, when inserting tests
 });

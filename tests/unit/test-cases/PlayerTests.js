@@ -1,45 +1,45 @@
 module('$ADP.Player');
 
-test('testInit', function() {
+test('init', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetId', function() {
+test('getId', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetDOMId', function() {
+test('getDOMId', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetPosition', function() {
+test('getPosition', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetHeader', function() {
+test('getHeader', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetFooter', function() {
+test('getFooter', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetPublisherInfo', function() {
+test('getPublisherInfo', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testUsePopupForPrivacyInfo', function() {
+test('usePopupForPrivacyInfo', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testHasPrivacyInfo', function() {
+test('hasPrivacyInfo', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testGetPrivacyInfos', function() {
+test('getPrivacyInfos', function() {
 	expect(0); // could be removed, when inserting tests
 });
 
-test('testInject', function() {
+test('inject', function() {
 	expect(0); // could be removed, when inserting tests
 });
