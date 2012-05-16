@@ -54,6 +54,7 @@ $ADP.Player = function (id, args) {
         if (privacyInfo.isValid()) this.items.push(privacyInfo);
       }
       this.usePopup = !!args.usePopup;
+      $ADP.Util.log(id,'Popup: '+this.usePopup);
     };
 
     /**
@@ -123,6 +124,30 @@ $ADP.Player = function (id, args) {
     };
     
     /**
+     * @name $ADP.Player#getPrivacyButtonText
+     * @function
+     * @description Returns the text displayed when hovering the privacy button.
+     * @todo: localization still has to be done, decission about dealing with special html characters
+     * 
+     * @returns {string}  The player's privacy button text. <b>Default:</b> <i>Datenschutzinfo</i>
+     */
+    self.prototype.getPrivacyButtonText = function () {
+      return 'Datenschutzinfo';
+    };
+    
+    /**
+     * @name $ADP.Player#getCloseButtonText
+     * @function
+     * @description Returns the text displayed inside the privacy panel.
+     * @todo: localization still has to be done, decission about dealing with special html characters
+     * 
+     * @returns {string}  The privacy panel's close button text. <b>Default:</b> <i>Schlie&szlig;en</i>
+     */
+    self.prototype.getCloseButtonText = function () {
+      return 'Schlie&szlig;en';
+    };
+    
+    /**
      * @name $ADP.Player#usePopupForPrivacyInfo
      * @function
      * @description Returns whether the privacy info should be displayed in a popup window.
@@ -172,11 +197,6 @@ $ADP.Player = function (id, args) {
       var obaId = this.getId();
       var domId = this.getDOMId();
       var position = this.getPosition();
-      var header = this.getHeader();
-      var footer = this.getFooter();
-      var publisherInfo = this.getPublisherInfo();
-      var items = this.getPrivacyInfos();
-      var usePopup = this.usePopupForPrivacyInfo();
       if (!obaId) {
         // No obaId specified for $ADP.Play/er.inject into ' + domId
         return;
@@ -191,27 +211,10 @@ $ADP.Player = function (id, args) {
       }
       var container = iframeButton || document.getElementById(domId);
       if (container) {
-        var privacy_info = '';
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i];
-          try {
-            privacy_info += item.render() + '<br />\n';
-          } catch (e) {}
-
-        }
-
-        // generate panel content
-        var panelContent = '';
-        if(header != '') panelContent = panelContent.concat('<div class="adp-panel-header">' + header + '<\/div>');
-        if(publisherInfo != '') panelContent = panelContent.concat('<div class="adp-panel-publisherinfo">' + publisherInfo + '<\/div>');
-        panelContent = panelContent.concat('<div class="adp-panel-info">' + privacy_info + '<\/div>');
-        if(footer != '') panelContent = panelContent.concat('<div class="adp-panel-footer">' + footer + '<\/div>');
-        
-        container.innerHTML = '<div id="adp-wrapper-' + obaId + '" class="adp-wrapper adp-' + position + '" style="z-index:99999999;">' + '<div id="adp-admarker-' + obaId + '" class="adp-admarker" >' + '<div id="adp-admarker-icon-' + obaId + '" class="adp-admarker-icon adp-' + position + '" onClick="$ADP.Player.showPrivacyInfo('+obaId+');"><\/div>' + '<div id="adp-admarker-text-' + obaId + '" class="adp-admarker-text adp-' + position + '"  onClick="$ADP.Player.showPrivacyInfo('+obaId+');">Datenschutzinfo<\/div>' + '<\/div>' + '<div id="adp-panel-' + obaId + '" class="adp-panel adp-' + position + '" style="display:none;">' + '<div id="adp-panel-close-' + obaId + '" class="adp-panel-close" onClick="$ADP.Player.hidePrivacyInfo('+obaId+');">Schlie&szlig;en<\/div>' + panelContent + '<\/div>' + '<\/div>';
-        
+        container.innerHTML = '<div id="adp-wrapper-' + obaId + '" class="adp-wrapper adp-' + position + '" style="z-index:99999999;">' + '<div id="adp-admarker-' + obaId + '" class="adp-admarker" >' + '<div id="adp-admarker-icon-' + obaId + '" class="adp-admarker-icon adp-' + position + '" onClick="$ADP.Registry.playerCmd('+obaId+',\'showPrivacy\');"><\/div>' + '<div id="adp-admarker-text-' + obaId + '" class="adp-admarker-text adp-' + position + '"  onClick="$ADP.Registry.playerCmd('+obaId+',\'showPrivacy\');">' + this.getPrivacyButtonText() + '<\/div>' + '<\/div>';
       } else {
         if (this.attempts > this.maxAttempts) {
-          //Too many attempts for ' + obaId + ', ' + domId
+          $ADP.Util.log('Too many attempts for ' + obaId + ', ' + domId);
           return;
         } else {
           ++this.attempts;
@@ -222,30 +225,95 @@ $ADP.Player = function (id, args) {
         }
       }
     };
+    
+    self.prototype.getPanelHTML = function() {
+      var obaId = this.getId();
+      var position = this.getPosition();
+      var header = this.getHeader();
+      var footer = this.getFooter();
+      var publisherInfo = this.getPublisherInfo();
+      var closeButtonText = this.getCloseButtonText();
+      var items = this.getPrivacyInfos();
+      var usePopup = this.usePopupForPrivacyInfo();
+      var closeAction = !usePopup ?"$ADP.Registry.playerCmd("+obaId+",'hidePrivacy');":'window.close();';
+      var privacy_info = '';
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        try {
+          privacy_info += item.render() + '<br />\n';
+        } catch (e) {}
+      }
+      
+      var panelContent = '';
+      if(header != '') panelContent = panelContent.concat('<div class="adp-panel-header">' + header + '<\/div>');
+      if(publisherInfo != '') panelContent = panelContent.concat('<div class="adp-panel-publisherinfo">' + publisherInfo + '<\/div>');
+      panelContent = panelContent.concat('<div class="adp-panel-info">' + privacy_info + '<\/div>');
+      if(footer != '') panelContent = panelContent.concat('<div class="adp-panel-footer">' + footer + '<\/div>');
+      
+      var HTML = '<div id="adp-panel-close-' + obaId + '" class="adp-panel-close" onClick="'+closeAction+'">' + closeButtonText + '<\/div>' + panelContent + '<\/div>';
+      return HTML;
+    };
+    
+    /**
+     * @name $ADP.Player#showPrivacy
+     * @function
+     * @description Will show the privacy information
+     * @param {integer} obaid
+     */
+    self.prototype.showPrivacy = function() {
+      var position = this.getPosition();
+      var obaId = this.getId();
+      var usePopup = this.usePopupForPrivacyInfo();
+      function renderInLayer() {
+        var panel = document.getElementById('adp-panel-' + obaId);
+        if (!panel) {
+          var wrapper = document.getElementById('adp-wrapper-'+obaId);
+          if(!wrapper) return;
+          var panel = document.createElement('DIV');
+          panel.id='adp-panel-' + obaId;
+          panel.className='adp-panel adp-' + position;
+          panel.display='block';
+          panel.innerHTML = this.getPanelHTML();
+          wrapper.appendChild(panel);
+        } else panel.style.display = 'block';
+      }
+      if (!usePopup) {
+        renderInLayer.apply(this);
+      } else {
+        var title = "Privacy Information";
+        var styles = document.styleSheets;
+        var popwin = "";
+        try{ 
+          popwin = window.open('',title,'width=400,height=400');
+        } catch(e) {popwin = window.open('about:blank');}
+        if(!popwin) { renderInLayer.apply(this); }
+        else {
+          popwin.resizeTo(400,400);
+          var popdoc = popwin.document;
+          window.popwin = popwin;
+          popdoc.write('<html><head><title>'+title+'</title>');
+          for (var k in styles)
+            if (styles[k].href) popdoc.write('<link rel="stylesheet" href="'+styles[k].href+'">');
+          popdoc.write('</head><body>');
+          popdoc.write(this.getPanelHTML());
+          popdoc.write('</body></html>');
+          popdoc.close();        
+        }
+      }
+    };
 
+    /**
+     * @name $ADP.Player#hidePrivacy
+     * @function
+     * @description hides the privacy information
+     * @param {integer} obaid
+     */
+    self.prototype.hidePrivacy = function() {
+      var obaId = this.getId();
+      var panel = document.getElementById('adp-panel-' + obaId);
+      if (panel) panel.style.display = 'none';
+    };    
   }
 
   this.init(id, args);
-};
-
-/**
- * @name $ADP.Player.showPrivacyInfo
- * @function
- * @description Will show the privacy information
- * @param {integer} obaid
- */
-$ADP.Player.showPrivacyInfo = function (obaid,use) {
-  var panel = document.getElementById('adp-panel-' + obaid);
-  if (panel) panel.style.display = 'block';
-};
-
-/**
- * @name $ADP.Player.hidePrivacyInfo
- * @function
- * @description hides the privacy information
- * @param {integer} obaid
- */
-$ADP.Player.hidePrivacyInfo = function (obaid) {
-  var panel = document.getElementById('adp-panel-' + obaid);
-  if (panel) panel.style.display = 'none';
 };
